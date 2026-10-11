@@ -2,17 +2,18 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    family: 4, 
+    port: 465,
+    secure: true,
+    family: 4,
 
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
-    connectionTimeout: 20000,
-    greetingTimeout: 20000,
-    socketTimeout: 30000,
+
+    connectionTimeout: 30000,
+    greetingTimeout: 30000,
+    socketTimeout: 45000,
 });
 
 const sendOTPEmail = async (email, otp, type) => {
@@ -32,6 +33,10 @@ const sendOTPEmail = async (email, otp, type) => {
         throw new Error("Invalid email type");
     }
 
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        throw new Error("EMAIL_USER or EMAIL_PASS is missing");
+    }
+
     const html = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
             <h2>${heading}</h2>
@@ -43,27 +48,30 @@ const sendOTPEmail = async (email, otp, type) => {
         </div>
     `;
 
-    
+    try {
+        const info = await transporter.sendMail({
+            from: `"PaperLingo" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject,
+            html,
+            text: `Your OTP for ${purpose} is ${otp}. It expires in 10 minutes.`,
+        });
 
-    if (process.env.NODE_ENV !== "production") {
-        console.log(`[DEV] ${type} OTP for ${email}: ${otp}`);
+        console.log(
+            `[MAIL] ${type} email sent. Accepted: ${JSON.stringify(info.accepted)}`
+        );
+
+        return info;
+    } catch (error) {
+        console.error("[MAIL] SMTP sending failed:", {
+            code: error.code,
+            command: error.command,
+            responseCode: error.responseCode,
+            message: error.message,
+        });
+
+        throw error;
     }
-
-    const info = await transporter.sendMail({
-        from: `"PaperLingo" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject,
-        html,
-        text: `Your OTP for ${purpose} is ${otp}. It expires in 10 minutes.`,
-    });
-
-    
-
-    console.log(
-        `[MAIL] ${type} to ${email} | accepted: ${JSON.stringify(info.accepted)} | rejected: ${JSON.stringify(info.rejected)} | response: ${info.response}`
-    );
-
-    return info;
 };
 
 module.exports = { sendOTPEmail };
