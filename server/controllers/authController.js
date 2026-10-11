@@ -23,9 +23,12 @@ function generateToken(user) {
   );
 }
 
-// =====================================================
-// REGISTER
-// =====================================================
+
+
+
+
+
+
 const registerUser = async (req, res) => {
   try {
     const { name, username, age, email, password } = req.body;
@@ -43,7 +46,8 @@ const registerUser = async (req, res) => {
         return res.status(400).json({ message: "Email already registered" });
       }
 
-      // Existing but unverified account: send a fresh OTP
+      
+
       const otp = generateOTP();
 
       existingEmail.verificationOTP = otp;
@@ -95,9 +99,12 @@ const registerUser = async (req, res) => {
   }
 };
 
-// =====================================================
-// VERIFY EMAIL OTP (signup)
-// =====================================================
+
+
+
+
+
+
 const verifyEmail = async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -145,9 +152,12 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-// =====================================================
-// RESEND VERIFICATION OTP (signup)
-// =====================================================
+
+
+
+
+
+
 const resendVerificationOTP = async (req, res) => {
   try {
     const { email } = req.body;
@@ -181,9 +191,12 @@ const resendVerificationOTP = async (req, res) => {
   }
 };
 
-// =====================================================
-// LOGIN
-// =====================================================
+
+
+
+
+
+
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -233,9 +246,12 @@ const loginUser = async (req, res) => {
   }
 };
 
-// =====================================================
-// FORGOT PASSWORD  (step 1: send OTP)
-// =====================================================
+
+
+
+
+
+
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -246,7 +262,8 @@ const forgotPassword = async (req, res) => {
 
     const user = await User.findOne({ email: email.toLowerCase().trim() });
 
-    // Same response whether or not the account exists
+    
+
     if (user && user.isVerified) {
       const otp = generateOTP();
 
@@ -267,9 +284,12 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-// =====================================================
-// VERIFY RESET OTP  (step 2: check OTP, return reset token)
-// =====================================================
+
+
+
+
+
+
 const verifyResetOTP = async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -309,13 +329,15 @@ const verifyResetOTP = async (req, res) => {
       return invalid();
     }
 
-    // Correct OTP: burn it
+    
+
     user.resetOTP = null;
     user.resetOTPExpires = null;
     user.resetOTPAttempts = 0;
     await user.save();
 
-    // Token is tied to the current password hash, so it dies once the password changes
+    
+
     const resetToken = jwt.sign(
       {
         id: user._id,
@@ -333,9 +355,12 @@ const verifyResetOTP = async (req, res) => {
   }
 };
 
-// =====================================================
-// RESET PASSWORD  (step 3: reset token + new password)
-// =====================================================
+
+
+
+
+
+
 const resetPassword = async (req, res) => {
   try {
     const { resetToken, newPassword } = req.body;

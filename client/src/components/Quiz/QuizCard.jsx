@@ -54,8 +54,10 @@ const QuizCard = ({
             return;
         }
 
-        // Calculate the complete score only once
-        // when the last question is submitted.
+        
+
+        
+
         let finalScore = 0;
 
         questions.forEach((question, index) => {
@@ -69,8 +71,10 @@ const QuizCard = ({
 
         setScore(finalScore);
 
-        // Pass the final score directly to EarnPoints
-        // so it does not depend on asynchronous state.
+        
+
+        
+
         setShowScore(finalScore);
     };
 

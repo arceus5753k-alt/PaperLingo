@@ -4,7 +4,8 @@ const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
-    family: 4, // use IPv4 (family: 6 times out on networks without IPv6)
+    family: 4, 
+
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -42,7 +43,8 @@ const sendOTPEmail = async (email, otp, type) => {
         </div>
     `;
 
-    // Development only: print the OTP so you can keep testing even if the email is late or lost
+    
+
     if (process.env.NODE_ENV !== "production") {
         console.log(`[DEV] ${type} OTP for ${email}: ${otp}`);
     }
@@ -55,7 +57,8 @@ const sendOTPEmail = async (email, otp, type) => {
         text: `Your OTP for ${purpose} is ${otp}. It expires in 10 minutes.`,
     });
 
-    // What Gmail actually answered. If "accepted" has the address, Gmail took the mail.
+    
+
     console.log(
         `[MAIL] ${type} to ${email} | accepted: ${JSON.stringify(info.accepted)} | rejected: ${JSON.stringify(info.rejected)} | response: ${info.response}`
     );

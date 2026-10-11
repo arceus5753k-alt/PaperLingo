@@ -10,16 +10,25 @@ import { useTheme } from '@mui/material/styles';
 export default function PageViewsBarChart({ rows = [] }) {
   const theme = useTheme();
 
-  // Give each stock its own colour.
+  
+
   const stockColors = [
-    '#60A5FA', // Blue
-    '#A78BFA', // Purple
-    '#34D399', // Green
-    '#FBBF24', // Amber
-    '#F87171', // Red
-    '#22D3EE', // Cyan
-    '#FB923C', // Orange
-    '#E879F9', // Pink
+    '#60A5FA', 
+
+    '#A78BFA', 
+
+    '#34D399', 
+
+    '#FBBF24', 
+
+    '#F87171', 
+
+    '#22D3EE', 
+
+    '#FB923C', 
+
+    '#E879F9', 
+
   ];
 
   const stockNames = rows.map((row) => row.stockName);
@@ -28,7 +37,8 @@ export default function PageViewsBarChart({ rows = [] }) {
     Number(row.totalPortfolioValue) || 0
   );
 
-  // MUI X Charts supports per-item colors through colorMap.
+  
+
   const stockColorMap = {
     type: 'ordinal',
     values: stockNames,

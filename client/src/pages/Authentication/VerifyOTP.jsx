@@ -67,7 +67,8 @@ export default function VerifyOTP() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // SignUp.jsx sends the email here via navigate("/verify-otp", { state: { email } })
+  
+
   const email = (location.state?.email || "").trim().toLowerCase();
 
   const [otp, setOtp] = useState("");
@@ -77,21 +78,24 @@ export default function VerifyOTP() {
   const [verified, setVerified] = useState(false);
   const [cooldown, setCooldown] = useState(RESEND_COOLDOWN_SECONDS);
 
-  // Resend cooldown timer
+  
+
   useEffect(() => {
     if (cooldown <= 0) return undefined;
     const timer = setTimeout(() => setCooldown((c) => c - 1), 1000);
     return () => clearTimeout(timer);
   }, [cooldown]);
 
-  // After successful verification, go to sign in
+  
+
   useEffect(() => {
     if (!verified) return undefined;
     const timer = setTimeout(() => navigate("/signin", { replace: true }), 2000);
     return () => clearTimeout(timer);
   }, [verified, navigate]);
 
-  // Opened /verify-otp directly (refresh or typed URL): no email to verify
+  
+
   if (!email) {
     return <Navigate to="/signup" replace />;
   }

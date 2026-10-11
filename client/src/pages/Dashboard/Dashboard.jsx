@@ -25,8 +25,10 @@ export default function Dashboard() {
     }
   }, [isMobile, dispatch]);
 
-  // Load the user's profile (name, email, avatar) as soon as the dashboard opens,
-  // so the sidebar doesn't show "Guest" until the Profile page is visited.
+  
+
+  
+
   useEffect(() => {
     let active = true;
 
@@ -57,17 +59,17 @@ export default function Dashboard() {
       <CssBaseline enableColorScheme />
 
       <Box sx={{ display: "flex", width: "100%", minHeight: "100vh" }}>
-        {/* Desktop Sidebar */}
+        {}
         <Box sx={{ display: { xs: "none", md: "block" }, flexShrink: 0 }}>
           <SideMenu />
         </Box>
 
-        {/* Mobile Sidebar */}
+        {}
         <Box sx={{ display: { xs: "block", md: "none" }, flexShrink: 0 }}>
           <SideMenuMobile />
         </Box>
 
-        {/* Main Content */}
+        {}
         <Box
           component="main"
           sx={(theme) => ({
@@ -102,7 +104,7 @@ export default function Dashboard() {
           </Stack>
         </Box>
 
-        {/* Chatbot Button */}
+        {}
         <ForumIcon
           onClick={toggleChatbot}
           sx={{
@@ -124,7 +126,7 @@ export default function Dashboard() {
           }}
         />
 
-        {/* Chatbot Window */}
+        {}
         {openChatbot && (
           <Box
             sx={{

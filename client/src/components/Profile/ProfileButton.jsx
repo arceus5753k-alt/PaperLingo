@@ -1,5 +1,5 @@
 import React from "react";
-import "./profileButton.scss";
+import "./profileButton.css";
 
 const ProfileButton = ({ label, handleClick, svgPath, onClick, className, disabled }) => {
   return (

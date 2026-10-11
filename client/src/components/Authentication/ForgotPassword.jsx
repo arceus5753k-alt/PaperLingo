@@ -20,7 +20,8 @@ function ForgotPassword() {
     setError("");
   };
 
-  // Step 1: Request password reset OTP
+  
+
   const sendOTP = async (e) => {
     e.preventDefault();
     clearAlerts();
@@ -55,7 +56,8 @@ function ForgotPassword() {
     }
   };
 
-  // Resend a fresh OTP
+  
+
   const resendOTP = async () => {
     clearAlerts();
 
@@ -80,7 +82,8 @@ function ForgotPassword() {
     }
   };
 
-  // Step 2: Verify OTP and reset password in one request
+  
+
   const resetPassword = async (e) => {
     e.preventDefault();
     clearAlerts();

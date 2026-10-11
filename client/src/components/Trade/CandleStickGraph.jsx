@@ -7,7 +7,8 @@ import { useTheme } from "@mui/material/styles";
 const CandleStickGraph = ({ stockData }) => {
     const theme = useTheme();
 
-    // Only format once data has actually arrived; before that, show an empty chart
+    
+
     const seriesData = useMemo(
         () => (stockData ? formatStockData(stockData) : []),
         [stockData]

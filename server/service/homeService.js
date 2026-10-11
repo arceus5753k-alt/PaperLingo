@@ -5,16 +5,22 @@ require("dotenv").config();
 
 const apiKey = process.env.ALPHA_VANTAGE_API_KEY;
 
-// ======================================================
-// CACHE SETTINGS
-// ======================================================
+
+
+
+
+
+
 
 const STOCK_CACHE_EXPIRY = 60 * 60 * 1000;
 const dailyStockCache = new Map();
 
-// ======================================================
-// ALPHA VANTAGE REQUEST CONTROL
-// ======================================================
+
+
+
+
+
+
 
 let lastAlphaVantageRequestTime = 0;
 
@@ -31,9 +37,12 @@ const waitForApiLimit = async () => {
     lastAlphaVantageRequestTime = Date.now();
 };
 
-// ======================================================
-// GENERIC ALPHA VANTAGE REQUEST
-// ======================================================
+
+
+
+
+
+
 
 const alphaVantageRequest = async (params) => {
     if (!apiKey) {
@@ -56,9 +65,12 @@ const alphaVantageRequest = async (params) => {
     return response.data;
 };
 
-// ======================================================
-// NEWS — GOOGLE NEWS RSS
-// ======================================================
+
+
+
+
+
+
 
 const newsParser = new Parser({
     timeout: 15000,
@@ -96,9 +108,12 @@ const fetchNews = async () => {
     }
 };
 
-// ======================================================
-// YAHOO FINANCE HELPERS
-// ======================================================
+
+
+
+
+
+
 
 const yahooRequest = async (url, params = {}) => {
     const response = await axios.get(url, {
@@ -170,9 +185,12 @@ const getYahooDailyData = async (symbol, range = "3mo") => {
     };
 };
 
-// ======================================================
-// TOP GAINERS / LOSERS / MOST ACTIVE
-// ======================================================
+
+
+
+
+
+
 
 const fetchGainersAndLosers = async () => {
     try {
@@ -282,9 +300,12 @@ const fetchGainersAndLosers = async () => {
     };
 };
 
-// ======================================================
-// STOCK SEARCH — ALPHA VANTAGE + YAHOO FALLBACK
-// ======================================================
+
+
+
+
+
+
 
 const searchYahooFinance = async (keyword) => {
     const data = await yahooRequest(
@@ -359,9 +380,12 @@ const searchTickers = async (keyword) => {
     }
 };
 
-// ======================================================
-// DAILY STOCK DATA WITH CACHE AND FALLBACK
-// ======================================================
+
+
+
+
+
+
 
 const fetchStockDaily = async (symbol) => {
     const normalizedSymbol =
@@ -381,7 +405,8 @@ const fetchStockDaily = async (symbol) => {
         return cachedStock.data;
     }
 
-    // Alpha Vantage first.
+    
+
     try {
         const data = await alphaVantageRequest({
             function: "TIME_SERIES_DAILY",
@@ -413,7 +438,8 @@ const fetchStockDaily = async (symbol) => {
         );
     }
 
-    // Yahoo Finance fallback.
+    
+
     try {
         const data = await getYahooDailyData(normalizedSymbol);
 
@@ -439,17 +465,23 @@ const fetchStockDaily = async (symbol) => {
     }
 };
 
-// ======================================================
-// TRADE PAGE COMPATIBILITY
-// ======================================================
+
+
+
+
+
+
 
 const fetchStockIntraday = async (symbol) => {
     return fetchStockDaily(symbol);
 };
 
-// ======================================================
-// EXPORTS — KEEP ALL REQUIRED FUNCTION NAMES
-// ======================================================
+
+
+
+
+
+
 
 module.exports = {
     fetchNews,

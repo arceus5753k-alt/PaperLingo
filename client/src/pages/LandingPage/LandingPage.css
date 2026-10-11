@@ -1,8 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 
-/* =========================
-   THEME VARIABLES
-========================= */
+
 
 :root {
     --primary-color: #673ab7;
@@ -17,9 +15,7 @@
     --max-width: 1400px;
 }
 
-/* =========================
-   GLOBAL STYLES
-========================= */
+
 
 * {
     padding: 0;
@@ -64,9 +60,7 @@ button {
     font-family: inherit;
 }
 
-/* =========================
-   NAVIGATION
-========================= */
+
 
 nav {
     width: 100%;
@@ -163,9 +157,7 @@ nav > a:hover {
     color: var(--text-dark);
 }
 
-/* =========================
-   BUTTONS
-========================= */
+
 
 .cta-button,
 .header__container button {
@@ -189,9 +181,7 @@ nav > a:hover {
     transform: translateY(-2px);
 }
 
-/* =========================
-   HERO SECTION
-========================= */
+
 
 .header__container {
     width: 100%;
@@ -288,9 +278,7 @@ nav > a:hover {
     color: var(--text-light);
 }
 
-/* =========================
-   GENERAL HEADER STYLES
-========================= */
+
 
 .header {
     width: 100%;
@@ -318,9 +306,7 @@ nav > a:hover {
     color: #b794f6;
 }
 
-/* =========================
-   SECTION LAYOUTS
-========================= */
+
 
 .features-section,
 .how-it-works-section,
@@ -345,9 +331,7 @@ nav > a:hover {
     justify-content: center;
 }
 
-/* =========================
-   SECTION HEADINGS
-========================= */
+
 
 .features-section h1,
 .faq-section h1,
@@ -360,9 +344,7 @@ nav > a:hover {
     color: var(--text-dark);
 }
 
-/* =========================
-   FEATURE AND BENEFIT CARDS
-========================= */
+
 
 .feature,
 .benefit {
@@ -403,9 +385,7 @@ nav > a:hover {
     visibility: visible;
 }
 
-/* =========================
-   HOW IT WORKS
-========================= */
+
 
 .steps-container {
     width: 100%;
@@ -467,9 +447,7 @@ nav > a:hover {
     color: var(--text-light);
 }
 
-/* =========================
-   FAQ SECTION
-========================= */
+
 
 .faq-section {
     background-color: var(--surface);
@@ -528,9 +506,7 @@ nav > a:hover {
     line-height: 1.7;
 }
 
-/* =========================
-   FEATURE CAROUSEL
-========================= */
+
 
 .features-section {
     text-align: center;
@@ -590,9 +566,7 @@ nav > a:hover {
     color: var(--text-light);
 }
 
-/* =========================
-   SLICK CAROUSEL CONTROLS
-========================= */
+
 
 .slick-slider {
     min-width: 0;
@@ -617,9 +591,7 @@ nav > a:hover {
     color: #a78bfa;
 }
 
-/* =========================
-   FOOTER
-========================= */
+
 
 .footer {
     width: 100%;
@@ -637,9 +609,7 @@ nav > a:hover {
     line-height: 1.7;
 }
 
-/* =========================
-   RESPONSIVE LAYOUT
-========================= */
+
 
 @media (min-width: 540px) {
     .nav__contact {
@@ -707,9 +677,7 @@ nav > a:hover {
     }
 }
 
-/* =========================
-   SMALL SCREEN FIXES
-========================= */
+
 
 @media (max-width: 480px) {
     nav {

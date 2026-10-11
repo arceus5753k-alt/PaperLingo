@@ -51,9 +51,12 @@ function SignUp() {
         throw new Error(data.message || "Registration failed");
       }
 
-      // IMPORTANT:
-      // Do NOT go to signin yet.
-      // First verify the email using OTP.
+      
+
+      
+
+      
+
       navigate("/verify-otp", {
         state: {
           email: formData.email,

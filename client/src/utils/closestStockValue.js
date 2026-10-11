@@ -23,7 +23,8 @@ export const closestStockValue = async (symbol) => {
 
         const timeSeries = data["Time Series (Daily)"];
 
-        // Get the most recent trading day
+        
+
         const latestDate = Object.keys(timeSeries)[0];
 
         const latestData = timeSeries[latestDate];

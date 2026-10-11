@@ -59,7 +59,8 @@ const buttonStyle = {
   },
 };
 
-// Steps: 1 = enter email, 2 = verify OTP, 3 = choose new password, 4 = done
+
+
 export default function ForgotPasswordPage() {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
@@ -76,7 +77,8 @@ export default function ForgotPasswordPage() {
     setError("");
   };
 
-  // Step 1 -> 2: request an OTP
+  
+
   const sendOTP = async (e) => {
     e.preventDefault();
     clearAlerts();
@@ -115,7 +117,8 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  // Step 2 -> 3: the server checks the OTP here, before any password is typed
+  
+
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     clearAlerts();
@@ -138,7 +141,8 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  // Step 3 -> 4: set the new password using the token from step 2
+  
+
   const handleReset = async (e) => {
     e.preventDefault();
     clearAlerts();

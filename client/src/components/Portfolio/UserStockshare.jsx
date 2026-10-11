@@ -117,9 +117,9 @@ export default function UserStockshare({ portfolioData }) {
                     User Stock Share
                 </Typography>
 
-                {/* ============================= */}
-                {/* NO STOCKS */}
-                {/* ============================= */}
+                {}
+                {}
+                {}
 
                 {data.length === 0 ? (
                     <Box
@@ -153,9 +153,9 @@ export default function UserStockshare({ portfolioData }) {
                     </Box>
                 ) : (
                     <>
-                        {/* ============================= */}
-                        {/* PIE CHART */}
-                        {/* ============================= */}
+                        {}
+                        {}
+                        {}
 
                         <Box
                             sx={{
@@ -232,9 +232,9 @@ export default function UserStockshare({ portfolioData }) {
                             />
                         </Box>
 
-                        {/* ============================= */}
-                        {/* STOCK LIST */}
-                        {/* ============================= */}
+                        {}
+                        {}
+                        {}
 
                         <Box>
                             {stocks.map((stock, index) => (

@@ -10,7 +10,8 @@ import {
 } from "@mui/material";
 
 const ConfirmPassword = () => {
-  const { id, token } = useParams(); // Extracts the id and token from the URL
+  const { id, token } = useParams(); 
+
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,7 +19,8 @@ const ConfirmPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Send a POST request to your server with id, token, and password
+    
+
     try {
       const response = await fetch(
         `http://localhost:8000/api/auth/confirmpassword/${id}/${token}`,
@@ -48,7 +50,8 @@ const ConfirmPassword = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#222", // Page background
+        backgroundColor: "#222", 
+
         padding: 4,
       }}
     >
@@ -70,7 +73,8 @@ const ConfirmPassword = () => {
           gap: 2,
           padding: 3,
           width: "100%",
-          backgroundColor: "#333", // Form background
+          backgroundColor: "#333", 
+
           borderRadius: 2,
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
         }}
@@ -83,9 +87,11 @@ const ConfirmPassword = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
             variant="outlined"
-            InputLabelProps={{ style: { color: "#aaa" } }} // Label color in dark theme
+            InputLabelProps={{ style: { color: "#aaa" } }} 
+
             InputProps={{
-              style: { color: "#fff", backgroundColor: "#444" }, // Input field background and text color
+              style: { color: "#fff", backgroundColor: "#444" }, 
+
             }}
             sx={{ "& .MuiOutlinedInput-root": { borderRadius: "8px" } }}
           />

@@ -21,11 +21,13 @@ app.use(
     })
 );
 
-// Increased limit to support profile-picture uploads.
+
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// API routes
+
+
 app.use("/api/auth", authRoutes);
 app.use("/api/home", homeRoutes);
 app.use("/api/portfolio", portfolioRoutes);
@@ -39,7 +41,8 @@ app.get("/", (req, res) => {
     });
 });
 
-// Handle oversized request bodies.
+
+
 app.use((err, req, res, next) => {
     if (err.type === "entity.too.large" || err.status === 413) {
         return res.status(413).json({
@@ -57,7 +60,8 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 8000;
 
-// Original MongoDB connection — preserved.
+
+
 mongoose
     .connect(process.env.MONGO_URI)
     .then(() => {

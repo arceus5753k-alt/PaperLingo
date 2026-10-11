@@ -24,7 +24,8 @@ exports.protect = async (req, res, next) => {
 
         next();
     } catch (error) {
-        console.error("Error verifying token:", error.message); // Log any errors during verification
+        console.error("Error verifying token:", error.message); 
+
         res.status(401).json({ message: "Not authorized 2" });
     }
 };

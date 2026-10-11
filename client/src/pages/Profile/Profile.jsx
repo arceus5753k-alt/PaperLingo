@@ -34,7 +34,7 @@ import { setUser, selectUserInfo } from "../../redux/UserSlice.js";
 
 import { getProfile, loginUser, updateProfile } from "../../api/auth.js";
 
-import "./profile.scss";
+import "./profile.css";
 
 const Profile = () => {
 
@@ -230,7 +230,8 @@ const Profile = () => {
 
         }
 
-        // Email is deliberately excluded from the update request.
+        
+
 
         const updatedFields = {
 

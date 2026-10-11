@@ -52,7 +52,8 @@ const TickerSearch = ({ onSelectStock }) => {
         setLoading(false);
     };
 
-    // Search when Enter is pressed
+    
+
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
             event.preventDefault();

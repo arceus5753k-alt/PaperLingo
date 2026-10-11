@@ -117,7 +117,7 @@ const BuySellNew = () => {
                             >
                                 {selectedStock.symbol} - {selectedStock.name}
                             </Typography>
-                            {/* component="div" because this block contains <div>/<p> children */}
+                            {}
                             <Typography
                                 component="div"
                                 variant="body1"

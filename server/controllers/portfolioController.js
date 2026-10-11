@@ -9,7 +9,8 @@ const getPortfolioData = async (req, res) => {
 
         const portfolio = {};
 
-        // Calculate holdings using existing transaction records.
+        
+
         for (const transaction of transactions) {
             const {
                 stockName,
@@ -60,7 +61,8 @@ const getPortfolioData = async (req, res) => {
             }
         }
 
-        // Fetch the latest available daily close for each stock.
+        
+
         for (const stockName of Object.keys(portfolio)) {
             const item = portfolio[stockName];
 

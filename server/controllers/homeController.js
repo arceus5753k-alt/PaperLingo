@@ -27,9 +27,12 @@ const isCacheExpired = (lastFetchTime, expiryTime) => {
     return Date.now() - lastFetchTime > expiryTime;
 };
 
-// ======================================================
-// NEWS
-// ======================================================
+
+
+
+
+
+
 
 const getNews = async (req, res) => {
     if (
@@ -59,9 +62,12 @@ const getNews = async (req, res) => {
     return res.json(newsCache.articles);
 };
 
-// ======================================================
-// TOP GAINERS / LOSERS
-// ======================================================
+
+
+
+
+
+
 
 const getTopGainersLosers = async (req, res) => {
     if (
@@ -106,9 +112,12 @@ const getTopGainersLosers = async (req, res) => {
     });
 };
 
-// ======================================================
-// STOCK SEARCH
-// ======================================================
+
+
+
+
+
+
 
 const searchStocks = async (req, res) => {
     try {
@@ -143,9 +152,12 @@ const searchStocks = async (req, res) => {
     }
 };
 
-// ======================================================
-// STOCK DATA
-// ======================================================
+
+
+
+
+
+
 
 const getStockIntraday = async (req, res) => {
     try {
@@ -176,9 +188,12 @@ const getStockIntraday = async (req, res) => {
     }
 };
 
-// ======================================================
-// EXPORTS
-// ======================================================
+
+
+
+
+
+
 
 module.exports = {
     getNews,
