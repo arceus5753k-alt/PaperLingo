@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-const API = "http://localhost:8000/api";
+const API = "https://paperlingo-api.onrender.com/api";
 
 function SignUp() {
   const navigate = useNavigate();

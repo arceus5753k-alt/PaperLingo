@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const API =
-  import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+  import.meta.env.VITE_API_URL || "https://paperlingo-api.onrender.com/api";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");

@@ -16,7 +16,7 @@ import axios from "axios";
 import SearchIcon from "@mui/icons-material/Search";
 
 const API =
-  import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+  import.meta.env.VITE_API_URL || "https://paperlingo-api.onrender.com/api";
 
 const TickerSearch = ({ onSelectStock }) => {
   const [inputValue, setInputValue] = useState("");

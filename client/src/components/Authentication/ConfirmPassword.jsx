@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 
 const API =
-  import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+  import.meta.env.VITE_API_URL || "https://paperlingo-api.onrender.com/api";
 
 const ConfirmPassword = () => {
   const { id, token } = useParams();
