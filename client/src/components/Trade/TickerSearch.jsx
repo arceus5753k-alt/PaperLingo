@@ -5,6 +5,7 @@ import {
     CircularProgress,
     List,
     ListItem,
+    ListItemButton,
     ListItemText,
     Stack,
     Box,
@@ -175,63 +176,59 @@ const TickerSearch = ({ onSelectStock }) => {
                     <List>
                         {options.map((option, index) => (
                             <ListItem
-                                button
                                 key={index}
-                                onClick={() =>
-                                    handleSelect(option)
-                                }
-                                sx={{
-                                    backgroundColor:
-                                        theme.palette
-                                            .background
-                                            .default,
-                                    borderRadius: "8px",
-                                    mb: 2,
-                                    padding:
-                                        "10px 20px",
-                                    transition:
-                                        "background-color 0.3s ease",
-                                    "&:hover": {
+                                disablePadding
+                                sx={{ mb: 2 }}
+                            >
+                                <ListItemButton
+                                    onClick={() =>
+                                        handleSelect(option)
+                                    }
+                                    sx={{
                                         backgroundColor:
                                             theme.palette
-                                                .action
-                                                .hover,
-                                    },
-                                    boxShadow:
-                                        "0px 2px 8px rgba(0, 0, 0, 0.05)",
-                                }}
-                            >
-                                <ListItemText
-                                    primary={
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                fontWeight:
-                                                    "600",
+                                                .background
+                                                .default,
+                                        borderRadius: "8px",
+                                        padding:
+                                            "10px 20px",
+                                        transition:
+                                            "background-color 0.3s ease",
+                                        "&:hover": {
+                                            backgroundColor:
+                                                theme.palette
+                                                    .action
+                                                    .hover,
+                                        },
+                                        boxShadow:
+                                            "0px 2px 8px rgba(0, 0, 0, 0.05)",
+                                    }}
+                                >
+                                    <ListItemText
+                                        primary={option.symbol}
+                                        secondary={option.name}
+                                        primaryTypographyProps={{
+                                            variant: "h6",
+                                            sx: {
+                                                fontWeight: 600,
                                                 color: theme
                                                     .palette
                                                     .text
                                                     .primary,
-                                            }}
-                                        >
-                                            {option.symbol}
-                                        </Typography>
-                                    }
-                                    secondary={
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
+                                            },
+                                        }}
+                                        secondaryTypographyProps={{
+                                            variant: "body2",
+                                            sx: {
                                                 color: theme
                                                     .palette
                                                     .text
                                                     .secondary,
                                                 opacity: 0.7,
-                                            }}
-                                        >
-                                            {option.name}
-                                        </Typography>
-                                    }
-                                />
+                                            },
+                                        }}
+                                    />
+                                </ListItemButton>
                             </ListItem>
                         ))}
                     </List>

@@ -1,4 +1,5 @@
-  
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import React, { useState, useEffect } from 'react';
 import ScrollReveal from 'scrollreveal';
 import headerImage from '../../assets/header.jpg';
@@ -203,9 +204,7 @@ const LandingPage = () => {
             </div>
           </section>
 
-          <footer className="footer">
-            <p>&copy; 2024 PaperLingo. All rights reserved.</p>
-          </footer>
+          
         </div>
       
     

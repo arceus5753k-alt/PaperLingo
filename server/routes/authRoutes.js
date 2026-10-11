@@ -1,4 +1,3 @@
-
 const express = require("express");
 
 const {
@@ -7,6 +6,7 @@ const {
     resendVerificationOTP,
     loginUser,
     forgotPassword,
+    verifyResetOTP,
     resetPassword,
 } = require("../controllers/authController");
 
@@ -23,10 +23,11 @@ router.post("/register", registerUser);
 router.post("/verify-email", verifyEmail);
 router.post("/resend-verification", resendVerificationOTP);
 router.post("/login", loginUser);
+
 router.post("/forgot-password", forgotPassword);
+router.post("/verify-reset-otp", verifyResetOTP);
 router.post("/reset-password", resetPassword);
 
-// Profile endpoints
 router.get("/profile", protect, getProfile);
 router.put("/profile", protect, updateProfile);
 

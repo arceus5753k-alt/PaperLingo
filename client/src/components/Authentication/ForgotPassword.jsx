@@ -1,236 +1,291 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
-import PropTypes from "prop-types";
+const API = "http://localhost:8000/api";
 
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
-
-import {
-  forgotPassword,
-  resetPassword,
-} from "../../api/auth";
-
-function ForgotPassword({ open, handleClose }) {
-  const [step, setStep] = useState(1);
-
+function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
-  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [step, setStep] = useState(1);
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
   const [loading, setLoading] = useState(false);
 
-  const handleSendOtp = async (event) => {
-    event.preventDefault();
-
-    setError("");
+  const clearAlerts = () => {
     setMessage("");
-    setLoading(true);
-
-    try {
-      const response = await forgotPassword({
-        email,
-      });
-
-      setMessage(response.message);
-
-      setStep(2);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    setError("");
   };
 
-  const handleResetPassword = async (event) => {
-    event.preventDefault();
+  // Step 1: Request password reset OTP
+  const sendOTP = async (e) => {
+    e.preventDefault();
+    clearAlerts();
 
-    setError("");
-    setMessage("");
+    const normalizedEmail = email.trim().toLowerCase();
 
-    if (otp.length !== 6) {
-      setError("Please enter the 6-digit OTP.");
+    if (!normalizedEmail) {
+      setError("Please enter your email address.");
       return;
     }
 
-    if (password.length < 6) {
-      setError(
-        "Password must be at least 6 characters."
+    try {
+      setLoading(true);
+
+      const response = await axios.post(
+        `${API}/auth/forgot-password`,
+        { email: normalizedEmail }
       );
-      return;
-    }
 
-    setLoading(true);
-
-    try {
-      const response = await resetPassword({
-        email,
-        otp,
-        password,
-      });
-
-      setMessage(response.message);
-
-      setTimeout(() => {
-        handleClose();
-
-        setStep(1);
-        setEmail("");
-        setOtp("");
-        setPassword("");
-        setMessage("");
-      }, 1500);
+      setEmail(normalizedEmail);
+      setOtp("");
+      setStep(2);
+      setMessage(
+        response.data.message || "OTP sent to your email."
+      );
     } catch (err) {
-      setError(err.message);
+      setError(
+        err.response?.data?.message || "Could not send OTP."
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const closeDialog = () => {
-    handleClose();
+  // Resend a fresh OTP
+  const resendOTP = async () => {
+    clearAlerts();
 
-    setStep(1);
-    setEmail("");
-    setOtp("");
-    setPassword("");
-    setMessage("");
-    setError("");
+    try {
+      setLoading(true);
+
+      const response = await axios.post(
+        `${API}/auth/forgot-password`,
+        { email: email.trim().toLowerCase() }
+      );
+
+      setOtp("");
+      setMessage(
+        response.data.message || "A new OTP has been sent."
+      );
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Could not resend OTP."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Step 2: Verify OTP and reset password in one request
+  const resetPassword = async (e) => {
+    e.preventDefault();
+    clearAlerts();
+
+    if (!/^\d{6}$/.test(otp.trim())) {
+      setError("Enter the latest 6-digit OTP from your email.");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setError("Password must contain at least 6 characters.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await axios.post(
+        `${API}/auth/reset-password`,
+        {
+          email: email.trim().toLowerCase(),
+          otp: otp.trim(),
+          newPassword,
+        }
+      );
+
+      setMessage(
+        response.data.message || "Password reset successfully."
+      );
+
+      setOtp("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setStep(3);
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Password reset failed."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={closeDialog}
-      PaperProps={{
-        component: "form",
-        onSubmit:
-          step === 1
-            ? handleSendOtp
-            : handleResetPassword,
+    <div
+      style={{
+        width: "400px",
+        maxWidth: "calc(100% - 32px)",
+        margin: "100px auto",
       }}
     >
-      <DialogTitle>
-        Reset Password
-      </DialogTitle>
+      <h1>
+        {step === 1
+          ? "Forgot Password"
+          : step === 2
+          ? "Reset Password"
+          : "Password Reset Successful"}
+      </h1>
 
-      <DialogContent
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          width: "100%",
-        }}
-      >
-        {step === 1 ? (
-          <>
-            <DialogContentText>
-              Enter your email address. We will send
-              you a password reset OTP.
-            </DialogContentText>
+      {message && (
+        <p style={{ color: "green", overflowWrap: "anywhere" }}>
+          {message}
+        </p>
+      )}
 
-            <TextField
-              autoFocus
-              required
-              fullWidth
-              label="Email address"
-              type="email"
-              value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-            />
-          </>
-        ) : (
-          <>
-            <DialogContentText>
-              Enter the OTP sent to:
-            </DialogContentText>
+      {error && (
+        <p style={{ color: "red", overflowWrap: "anywhere" }}>
+          {error}
+        </p>
+      )}
 
-            <strong>{email}</strong>
+      {step === 1 && (
+        <form onSubmit={sendOTP}>
+          <p>Enter your registered email to receive an OTP.</p>
 
-            <TextField
-              autoFocus
-              required
-              fullWidth
-              label="OTP"
-              value={otp}
-              onChange={(e) =>
-                setOtp(
-                  e.target.value
-                    .replace(/\D/g, "")
-                    .slice(0, 6)
-                )
-              }
-              inputProps={{
-                maxLength: 6,
-              }}
-            />
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
+            style={inputStyle}
+          />
 
-            <TextField
-              required
-              fullWidth
-              label="New Password"
-              type="password"
-              value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
-            />
-          </>
-        )}
+          <button
+            type="submit"
+            disabled={loading}
+            style={buttonStyle}
+          >
+            {loading ? "SENDING..." : "SEND OTP"}
+          </button>
+        </form>
+      )}
 
-        {error && (
-          <DialogContentText color="error">
-            {error}
-          </DialogContentText>
-        )}
+      {step === 2 && (
+        <form onSubmit={resetPassword}>
+          <p>Enter the latest OTP sent to {email}.</p>
 
-        {message && (
-          <DialogContentText color="green">
-            {message}
-          </DialogContentText>
-        )}
-      </DialogContent>
+          <label htmlFor="otp">6-digit OTP</label>
+          <input
+            id="otp"
+            type="text"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={6}
+            required
+            value={otp}
+            onChange={(e) =>
+              setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+            }
+            disabled={loading}
+            style={inputStyle}
+          />
 
-      <DialogActions
-        sx={{
-          pb: 3,
-          px: 3,
-        }}
-      >
-        <Button onClick={closeDialog}>
-          Cancel
-        </Button>
+          <button
+            type="button"
+            onClick={resendOTP}
+            disabled={loading}
+            style={{ ...buttonStyle, background: "#555" }}
+          >
+            RESEND OTP
+          </button>
 
-        <Button
-          variant="contained"
-          type="submit"
-          disabled={loading}
-        >
-          {step === 1
-            ? loading
-              ? "Sending..."
-              : "Send OTP"
-            : loading
-            ? "Resetting..."
-            : "Reset Password"}
-        </Button>
-      </DialogActions>
-    </Dialog>
+          <label htmlFor="newPassword">New password</label>
+          <input
+            id="newPassword"
+            type="password"
+            autoComplete="new-password"
+            minLength={6}
+            required
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            disabled={loading}
+            style={inputStyle}
+          />
+
+          <label htmlFor="confirmPassword">Confirm password</label>
+          <input
+            id="confirmPassword"
+            type="password"
+            autoComplete="new-password"
+            minLength={6}
+            required
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            disabled={loading}
+            style={inputStyle}
+          />
+
+          <button
+            type="submit"
+            disabled={loading}
+            style={buttonStyle}
+          >
+            {loading ? "RESETTING..." : "VERIFY OTP & RESET PASSWORD"}
+          </button>
+        </form>
+      )}
+
+      {step === 3 && (
+        <div>
+          <p>You can now sign in with your new password.</p>
+          <Link to="/signin">Back to Sign in</Link>
+        </div>
+      )}
+
+      {step !== 3 && (
+        <p style={{ textAlign: "center", marginTop: "20px" }}>
+          <Link to="/signin">Back to Sign in</Link>
+        </p>
+      )}
+    </div>
   );
 }
 
-ForgotPassword.propTypes = {
-  handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
+const inputStyle = {
+  display: "block",
+  width: "100%",
+  padding: "12px",
+  marginTop: "6px",
+  marginBottom: "18px",
+  boxSizing: "border-box",
+  border: "1px solid #ccc",
+  borderRadius: "5px",
+  fontSize: "16px",
+};
+
+const buttonStyle = {
+  display: "block",
+  width: "100%",
+  padding: "13px",
+  marginBottom: "18px",
+  border: "none",
+  borderRadius: "5px",
+  background: "#333",
+  color: "white",
+  cursor: "pointer",
+  fontSize: "14px",
 };
 
 export default ForgotPassword;

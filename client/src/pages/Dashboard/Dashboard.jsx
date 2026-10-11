@@ -9,6 +9,8 @@ import SideMenuMobile from "../../components/Dashboard/SideMenuMobile";
 import { useMediaQuery } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { closeMobileMenu } from "../../redux/MobileMenuSlice";
+import { setUser } from "../../redux/UserSlice";
+import { getProfile } from "../../api/auth";
 import ForumIcon from "@mui/icons-material/Forum";
 import ChatBot from "../../components/ChatBot/ChatBot";
 
@@ -22,6 +24,29 @@ export default function Dashboard() {
       dispatch(closeMobileMenu());
     }
   }, [isMobile, dispatch]);
+
+  // Load the user's profile (name, email, avatar) as soon as the dashboard opens,
+  // so the sidebar doesn't show "Guest" until the Profile page is visited.
+  useEffect(() => {
+    let active = true;
+
+    const loadProfile = async () => {
+      try {
+        const profile = await getProfile();
+        if (active && profile) {
+          dispatch(setUser(profile));
+        }
+      } catch (error) {
+        console.error("Could not load profile for sidebar:", error.message);
+      }
+    };
+
+    loadProfile();
+
+    return () => {
+      active = false;
+    };
+  }, [dispatch]);
 
   const toggleChatbot = () => {
     setOpenChatbot((prev) => !prev);

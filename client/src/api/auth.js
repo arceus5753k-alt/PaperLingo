@@ -1,4 +1,3 @@
-
 import apiClient from "../services/apiClient";
 
 const getErrorMessage = (error, fallback) => {
@@ -48,9 +47,7 @@ export const updateProfile = async (userData) => {
         const response = await apiClient.put("/auth/profile", userData);
 
         if (!response.data?.user) {
-            throw new Error(
-                "The server responded, but did not return the updated user."
-            );
+            throw new Error("The server did not return the updated user.");
         }
 
         return response.data.user;
@@ -71,6 +68,24 @@ export const deleteProfile = async () => {
 export const forgotPassword = async (data) => {
     try {
         const response = await apiClient.post("/auth/forgot-password", data);
+        return response.data;
+    } catch (error) {
+        throw new Error(getErrorMessage(error, "Could not send reset OTP."));
+    }
+};
+
+export const verifyResetOtp = async (data) => {
+    try {
+        const response = await apiClient.post("/auth/verify-reset-otp", data);
+        return response.data;
+    } catch (error) {
+        throw new Error(getErrorMessage(error, "Could not verify the code."));
+    }
+};
+
+export const resetPassword = async (data) => {
+    try {
+        const response = await apiClient.post("/auth/reset-password", data);
         return response.data;
     } catch (error) {
         throw new Error(getErrorMessage(error, "Password reset failed."));

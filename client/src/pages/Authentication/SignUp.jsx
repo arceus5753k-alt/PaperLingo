@@ -75,6 +75,7 @@ function SignUp() {
       style={{
         minHeight: "100vh",
         background: "#f7f9fc",
+        color: "#111",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -84,7 +85,9 @@ function SignUp() {
       <div
         style={{
           width: "420px",
+          maxWidth: "100%",
           background: "#fff",
+          color: "#111",
           padding: "35px",
           borderRadius: "8px",
           boxShadow: "0 5px 25px rgba(0,0,0,0.12)",
@@ -95,6 +98,7 @@ function SignUp() {
             fontSize: "38px",
             fontWeight: "400",
             marginBottom: "25px",
+            color: "#111",
           }}
         >
           Sign up
@@ -192,10 +196,13 @@ function SignUp() {
           style={{
             textAlign: "center",
             marginTop: "25px",
+            color: "#111",
           }}
         >
           Already have an account?{" "}
-          <Link to="/signin">Sign in</Link>
+          <Link to="/signin" style={{ color: "#4f46e5" }}>
+            Sign in
+          </Link>
         </p>
       </div>
     </div>
@@ -211,6 +218,8 @@ const inputStyle = {
   border: "1px solid #ccc",
   borderRadius: "5px",
   fontSize: "16px",
+  color: "#111",
+  background: "#fff",
 };
 
 export default SignUp;

@@ -77,7 +77,9 @@ const Portfolio = () => {
                     : response.data?.portfolio;
 
                 if (!Array.isArray(items)) {
-                    throw new Error("Portfolio API did not return an array.");
+                    throw new Error(
+                        "Portfolio API did not return an array."
+                    );
                 }
 
                 const normalizedData = items.map((item, index) => ({
@@ -147,9 +149,12 @@ const Portfolio = () => {
         <Box
             sx={{
                 width: "100%",
-                maxWidth: { sm: "100%", md: "1700px" },
+                maxWidth: "100%",
+                minWidth: 0,
                 p: 2,
                 boxSizing: "border-box",
+                bgcolor: "background.default",
+                color: "text.primary",
             }}
         >
             <Typography variant="h3" sx={{ mb: 2 }}>
@@ -161,6 +166,7 @@ const Portfolio = () => {
                     display: "flex",
                     flexDirection: { xs: "column", lg: "row" },
                     gap: 2,
+                    minWidth: 0,
                 }}
             >
                 <Box sx={{ flexGrow: 1, minWidth: 0 }}>
@@ -200,6 +206,7 @@ const Portfolio = () => {
                             display: "flex",
                             flexDirection: { xs: "column", lg: "row" },
                             gap: 2,
+                            minWidth: 0,
                         }}
                     >
                         <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -212,6 +219,7 @@ const Portfolio = () => {
                     sx={{
                         width: { xs: "100%", lg: 205 },
                         flexShrink: 0,
+                        minWidth: 0,
                     }}
                 >
                     <Stack direction="column" spacing={2}>
@@ -220,7 +228,7 @@ const Portfolio = () => {
                 </Box>
             </Box>
 
-            <Box sx={{ mt: 2, minWidth: 0 }}>
+            <Box sx={{ mt: 2, minWidth: 0, width: "100%" }}>
                 <PortfolioTable rows={portfolioData} />
             </Box>
         </Box>

@@ -32,7 +32,9 @@ const BuySellNew = () => {
             const response = await getStockDetails(selectedStock.symbol);
             if (response) setStockDetails(response);
         } catch (error) {
-            setErrorMessage(error.response?.message || "An error occurred");
+            setErrorMessage(
+                error.response?.data?.message || "An error occurred"
+            );
         } finally {
             setLoading(false);
         }
@@ -57,9 +59,10 @@ const BuySellNew = () => {
                 stockData.message ? 0 : parseFloat(stockData.data["4. close"])
             );
             setCandleData(stockData.dataR);
-            setLoading(false);
         } catch (error) {
             setErrorMessage("Error fetching stock price");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -114,7 +117,9 @@ const BuySellNew = () => {
                             >
                                 {selectedStock.symbol} - {selectedStock.name}
                             </Typography>
+                            {/* component="div" because this block contains <div>/<p> children */}
                             <Typography
+                                component="div"
                                 variant="body1"
                                 sx={{ fontSize: "1.2rem" }}
                             >

@@ -1,4 +1,3 @@
-
 const User = require("../models/user.js");
 const { GoogleGenAI } = require("@google/genai");
 
@@ -298,9 +297,10 @@ const convertPoints = async (req, res) => {
         const userId = req.user.id;
         const { pointsToConvert } = req.body;
 
+        // 0 is allowed (score of 0/5); only negative or non-integer values are invalid
         if (
             !Number.isInteger(pointsToConvert) ||
-            pointsToConvert <= 0
+            pointsToConvert < 0
         ) {
             return res.status(400).json({
                 message: "Invalid points value.",
@@ -312,6 +312,15 @@ const convertPoints = async (req, res) => {
         if (!user) {
             return res.status(404).json({
                 message: "User not found.",
+            });
+        }
+
+        // Nothing to add: return the current values and skip the save
+        if (pointsToConvert === 0) {
+            return res.status(200).json({
+                message: "No points earned this time. Try again!",
+                points: user.points || 0,
+                balance: user.balance || 0,
             });
         }
 
