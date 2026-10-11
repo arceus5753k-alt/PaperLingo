@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-const API = "http://localhost:8000/api";
+const API =
+  import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -19,8 +20,6 @@ function ForgotPassword() {
     setMessage("");
     setError("");
   };
-
-  
 
   const sendOTP = async (e) => {
     e.preventDefault();
@@ -49,14 +48,13 @@ function ForgotPassword() {
       );
     } catch (err) {
       setError(
-        err.response?.data?.message || "Could not send OTP."
+        err.response?.data?.message ||
+          "Could not send OTP. Please try again."
       );
     } finally {
       setLoading(false);
     }
   };
-
-  
 
   const resendOTP = async () => {
     clearAlerts();
@@ -75,14 +73,13 @@ function ForgotPassword() {
       );
     } catch (err) {
       setError(
-        err.response?.data?.message || "Could not resend OTP."
+        err.response?.data?.message ||
+          "Could not resend OTP."
       );
     } finally {
       setLoading(false);
     }
   };
-
-  
 
   const resetPassword = async (e) => {
     e.preventDefault();
@@ -116,7 +113,8 @@ function ForgotPassword() {
       );
 
       setMessage(
-        response.data.message || "Password reset successfully."
+        response.data.message ||
+          "Password reset successfully."
       );
 
       setOtp("");
@@ -125,7 +123,8 @@ function ForgotPassword() {
       setStep(3);
     } catch (err) {
       setError(
-        err.response?.data?.message || "Password reset failed."
+        err.response?.data?.message ||
+          "Password reset failed."
       );
     } finally {
       setLoading(false);
@@ -138,6 +137,7 @@ function ForgotPassword() {
         width: "400px",
         maxWidth: "calc(100% - 32px)",
         margin: "100px auto",
+        color: "#222",
       }}
     >
       <h1>
@@ -149,13 +149,25 @@ function ForgotPassword() {
       </h1>
 
       {message && (
-        <p style={{ color: "green", overflowWrap: "anywhere" }}>
+        <p
+          role="status"
+          style={{
+            color: "green",
+            overflowWrap: "anywhere",
+          }}
+        >
           {message}
         </p>
       )}
 
       {error && (
-        <p style={{ color: "red", overflowWrap: "anywhere" }}>
+        <p
+          role="alert"
+          style={{
+            color: "red",
+            overflowWrap: "anywhere",
+          }}
+        >
           {error}
         </p>
       )}
@@ -164,10 +176,11 @@ function ForgotPassword() {
         <form onSubmit={sendOTP}>
           <p>Enter your registered email to receive an OTP.</p>
 
-          <label htmlFor="email">Email</label>
+          <label htmlFor="forgot-email">Email</label>
           <input
-            id="email"
+            id="forgot-email"
             type="email"
+            autoComplete="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -189,9 +202,9 @@ function ForgotPassword() {
         <form onSubmit={resetPassword}>
           <p>Enter the latest OTP sent to {email}.</p>
 
-          <label htmlFor="otp">6-digit OTP</label>
+          <label htmlFor="forgot-otp">6-digit OTP</label>
           <input
-            id="otp"
+            id="forgot-otp"
             type="text"
             inputMode="numeric"
             autoComplete="one-time-code"
@@ -199,7 +212,9 @@ function ForgotPassword() {
             required
             value={otp}
             onChange={(e) =>
-              setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+              setOtp(
+                e.target.value.replace(/\D/g, "").slice(0, 6)
+              )
             }
             disabled={loading}
             style={inputStyle}
@@ -209,14 +224,19 @@ function ForgotPassword() {
             type="button"
             onClick={resendOTP}
             disabled={loading}
-            style={{ ...buttonStyle, background: "#555" }}
+            style={{
+              ...buttonStyle,
+              background: "#555",
+            }}
           >
-            RESEND OTP
+            {loading ? "PLEASE WAIT..." : "RESEND OTP"}
           </button>
 
-          <label htmlFor="newPassword">New password</label>
+          <label htmlFor="new-password">
+            New password
+          </label>
           <input
-            id="newPassword"
+            id="new-password"
             type="password"
             autoComplete="new-password"
             minLength={6}
@@ -227,15 +247,19 @@ function ForgotPassword() {
             style={inputStyle}
           />
 
-          <label htmlFor="confirmPassword">Confirm password</label>
+          <label htmlFor="confirm-password">
+            Confirm password
+          </label>
           <input
-            id="confirmPassword"
+            id="confirm-password"
             type="password"
             autoComplete="new-password"
             minLength={6}
             required
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) =>
+              setConfirmPassword(e.target.value)
+            }
             disabled={loading}
             style={inputStyle}
           />
@@ -245,7 +269,9 @@ function ForgotPassword() {
             disabled={loading}
             style={buttonStyle}
           >
-            {loading ? "RESETTING..." : "VERIFY OTP & RESET PASSWORD"}
+            {loading
+              ? "RESETTING..."
+              : "VERIFY OTP & RESET PASSWORD"}
           </button>
         </form>
       )}
@@ -276,6 +302,8 @@ const inputStyle = {
   border: "1px solid #ccc",
   borderRadius: "5px",
   fontSize: "16px",
+  color: "#222",
+  backgroundColor: "#fff",
 };
 
 const buttonStyle = {

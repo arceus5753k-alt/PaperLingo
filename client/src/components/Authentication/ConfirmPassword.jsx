@@ -9,21 +9,37 @@ import {
   Container,
 } from "@mui/material";
 
-const ConfirmPassword = () => {
-  const { id, token } = useParams(); 
+const API =
+  import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
+const ConfirmPassword = () => {
+  const { id, token } = useParams();
   const navigate = useNavigate();
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    
+    if (password.length < 6) {
+      setError("Password must contain at least 6 characters.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
 
     try {
+      setLoading(true);
+
       const response = await fetch(
-        `http://localhost:8000/api/auth/confirmpassword/${id}/${token}`,
+        `${API}/auth/confirmpassword/${id}/${token}`,
         {
           method: "POST",
           headers: {
@@ -33,11 +49,21 @@ const ConfirmPassword = () => {
         }
       );
 
-      const data = await response.json();
-      alert(data.message || "Password updated successfully");
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Could not update password."
+        );
+      }
+
+      alert(data.message || "Password updated successfully.");
       navigate("/signin");
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (err) {
+      console.error("Password reset error:", err);
+      setError(err.message || "Could not update password.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,9 +76,9 @@ const ConfirmPassword = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#222", 
-
+        backgroundColor: "#222",
         padding: 4,
+        boxSizing: "border-box",
       }}
     >
       <Typography
@@ -63,6 +89,7 @@ const ConfirmPassword = () => {
       >
         Reset Password
       </Typography>
+
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -73,49 +100,67 @@ const ConfirmPassword = () => {
           gap: 2,
           padding: 3,
           width: "100%",
-          backgroundColor: "#333", 
-
+          backgroundColor: "#333",
           borderRadius: 2,
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
+          boxSizing: "border-box",
         }}
       >
-        <FormControl fullWidth variant="outlined">
+        {error && (
+          <Typography
+            role="alert"
+            sx={{ color: "#ff7777", width: "100%" }}
+          >
+            {error}
+          </Typography>
+        )}
+
+        <FormControl fullWidth>
           <TextField
             type="password"
             label="New Password"
+            autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            variant="outlined"
-            InputLabelProps={{ style: { color: "#aaa" } }} 
-
-            InputProps={{
-              style: { color: "#fff", backgroundColor: "#444" }, 
-
-            }}
-            sx={{ "& .MuiOutlinedInput-root": { borderRadius: "8px" } }}
-          />
-        </FormControl>
-
-        <FormControl fullWidth variant="outlined">
-          <TextField
-            type="password"
-            label="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            variant="outlined"
+            inputProps={{ minLength: 6 }}
             InputLabelProps={{ style: { color: "#aaa" } }}
             InputProps={{
               style: { color: "#fff", backgroundColor: "#444" },
             }}
-            sx={{ "& .MuiOutlinedInput-root": { borderRadius: "8px" } }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "8px",
+              },
+            }}
+          />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <TextField
+            type="password"
+            label="Confirm Password"
+            autoComplete="new-password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            inputProps={{ minLength: 6 }}
+            InputLabelProps={{ style: { color: "#aaa" } }}
+            InputProps={{
+              style: { color: "#fff", backgroundColor: "#444" },
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "8px",
+              },
+            }}
           />
         </FormControl>
 
         <Button
           type="submit"
           variant="contained"
+          disabled={loading}
           sx={{
             mt: 2,
             backgroundColor: "#555",
@@ -125,7 +170,7 @@ const ConfirmPassword = () => {
             paddingX: 3,
           }}
         >
-          Submit
+          {loading ? "UPDATING..." : "Submit"}
         </Button>
       </Box>
     </Container>

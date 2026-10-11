@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+const API =
+  import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+
 function SignIn() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -17,21 +19,23 @@ function SignIn() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/auth/login", {
+      const response = await fetch(`${API}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          email: email.trim(),
           password,
         }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        throw new Error(data.message || "Invalid email or password");
+        throw new Error(
+          data.message || `Login failed (${response.status}).`
+        );
       }
 
       if (data.token) {
@@ -45,7 +49,11 @@ function SignIn() {
       navigate("/dashboard/home");
     } catch (err) {
       console.error("Login error:", err);
-      setError(err.message || "Could not login. Please try again.");
+
+      setError(
+        err.message ||
+          "Could not login. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -60,21 +68,27 @@ function SignIn() {
         justifyContent: "center",
         alignItems: "center",
         padding: "30px",
+        boxSizing: "border-box",
       }}
     >
       <div
         style={{
           width: "420px",
+          maxWidth: "100%",
           background: "#fff",
+          color: "#222",
           padding: "35px",
           borderRadius: "8px",
           boxShadow: "0 5px 25px rgba(0,0,0,0.12)",
+          boxSizing: "border-box",
         }}
       >
         <h1
           style={{
+            color: "#222",
             fontSize: "38px",
             fontWeight: "400",
+            marginTop: 0,
             marginBottom: "25px",
           }}
         >
@@ -83,9 +97,11 @@ function SignIn() {
 
         {error && (
           <p
+            role="alert"
             style={{
-              color: "red",
+              color: "#d32f2f",
               marginBottom: "15px",
+              overflowWrap: "anywhere",
             }}
           >
             {error}
@@ -93,28 +109,51 @@ function SignIn() {
         )}
 
         <form onSubmit={handleSubmit}>
-          <label>Email *</label>
+          <label
+            htmlFor="signin-email"
+            style={{ display: "block", color: "#222" }}
+          >
+            Email *
+          </label>
 
           <input
+            id="signin-email"
             type="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
             style={inputStyle}
           />
 
-          <label>Password *</label>
+          <label
+            htmlFor="signin-password"
+            style={{ display: "block", color: "#222" }}
+          >
+            Password *
+          </label>
 
           <input
+            id="signin-password"
             type="password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
             style={inputStyle}
           />
 
-          <div style={{ textAlign: "right", marginBottom: "15px" }}>
-            <Link to="/forgot-password">Forgot password?</Link>
+          <div
+            style={{
+              textAlign: "right",
+              marginBottom: "15px",
+            }}
+          >
+            <Link to="/forgot-password">
+              Forgot password?
+            </Link>
           </div>
 
           <button
@@ -137,6 +176,7 @@ function SignIn() {
 
         <p
           style={{
+            color: "#222",
             textAlign: "center",
             marginTop: "25px",
           }}
@@ -150,6 +190,7 @@ function SignIn() {
 }
 
 const inputStyle = {
+  display: "block",
   width: "100%",
   boxSizing: "border-box",
   padding: "14px",
@@ -158,6 +199,8 @@ const inputStyle = {
   border: "1px solid #ccc",
   borderRadius: "5px",
   fontSize: "16px",
+  color: "#222",
+  backgroundColor: "#fff",
 };
 
 export default SignIn;
