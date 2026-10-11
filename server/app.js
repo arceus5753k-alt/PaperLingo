@@ -13,22 +13,33 @@ const chatRoutes = require("./routes/chatRoutes");
 
 const app = express();
 
-// Allowed frontend origins
+// CORS configuration
 const allowedOrigins = [
     "http://localhost:5173",
     "https://paper-lingo-iota.vercel.app",
-    "https://paper-lingo-mfxgo08zl-arceus5753k-alts-projects.vercel.app",
 ];
 
 app.use(
     cors({
         origin: function (origin, callback) {
-            // Allow requests without an Origin header, such as server-to-server requests
-            if (!origin || allowedOrigins.includes(origin)) {
+            // Allow requests without an Origin header.
+            if (!origin) {
+                return callback(null, true);
+            }
+
+            // Allow the known production domain and matching Vercel previews.
+            const isAllowed =
+                allowedOrigins.includes(origin) ||
+                /^https:\/\/paper-lingo-[a-z0-9-]+-arceus5753k-alts-projects\.vercel\.app$/.test(
+                    origin
+                );
+
+            if (isAllowed) {
                 return callback(null, true);
             }
 
             console.error("CORS blocked origin:", origin);
+
             return callback(new Error("Origin not allowed by CORS"));
         },
         credentials: true,
@@ -47,6 +58,7 @@ app.use(
     })
 );
 
+// Request body parsing
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
@@ -65,7 +77,7 @@ app.get("/", (req, res) => {
     });
 });
 
-// Error handler
+// Error handling
 app.use((err, req, res, next) => {
     if (err.type === "entity.too.large" || err.status === 413) {
         return res.status(413).json({
@@ -81,9 +93,9 @@ app.use((err, req, res, next) => {
     });
 });
 
+// Start server after connecting to MongoDB
 const PORT = process.env.PORT || 8000;
 
-// Connect to MongoDB and start the server
 mongoose
     .connect(process.env.MONGO_URI)
     .then(() => {
