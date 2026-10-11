@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 
 const express = require("express");
@@ -14,20 +13,44 @@ const chatRoutes = require("./routes/chatRoutes");
 
 const app = express();
 
+// Allowed frontend origins
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://paper-lingo-iota.vercel.app",
+    "https://paper-lingo-mfxgo08zl-arceus5753k-alts-projects.vercel.app",
+];
+
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: function (origin, callback) {
+            // Allow requests without an Origin header, such as server-to-server requests
+            if (!origin || allowedOrigins.includes(origin)) {
+                return callback(null, true);
+            }
+
+            console.error("CORS blocked origin:", origin);
+            return callback(new Error("Origin not allowed by CORS"));
+        },
         credentials: true,
+        methods: [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS",
+        ],
+        allowedHeaders: [
+            "Content-Type",
+            "Authorization",
+        ],
     })
 );
-
-
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-
-
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/home", homeRoutes);
 app.use("/api/portfolio", portfolioRoutes);
@@ -35,14 +58,14 @@ app.use("/api/transaction", transactionRoutes);
 app.use("/api/quiz", quizRoutes);
 app.use("/api/chat", chatRoutes);
 
+// Health check
 app.get("/", (req, res) => {
     res.json({
         message: "PaperLingo server is running",
     });
 });
 
-
-
+// Error handler
 app.use((err, req, res, next) => {
     if (err.type === "entity.too.large" || err.status === 413) {
         return res.status(413).json({
@@ -60,8 +83,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 8000;
 
-
-
+// Connect to MongoDB and start the server
 mongoose
     .connect(process.env.MONGO_URI)
     .then(() => {
